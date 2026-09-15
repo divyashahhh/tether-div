@@ -47,6 +47,13 @@ async function request(path, { method = "GET", json, form } = {}) {
   }
 
   if (!response.ok) {
+    if (!(response.headers.get("content-type") || "").includes("application/json")) {
+      // A static host (e.g. Vercel) answered instead of the Tether backend.
+      throw new ApiError(
+        "Tether's server isn't connected to this site. Set VITE_TETHER_API_URL to the backend's URL and redeploy.",
+        response.status
+      );
+    }
     let detail = `Something went wrong (${response.status})`;
     try {
       const data = await response.json();
