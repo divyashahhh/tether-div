@@ -1,0 +1,19 @@
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Dependencies & builds
+node_modules/
+dist/
+.venv/
+__pycache__/
+*.pyc
+
+# Local app data (SQLite database + uploaded photos)
+backend/data/
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
