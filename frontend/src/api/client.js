@@ -1,3 +1,8 @@
+import { DemoSocket, demoApi } from "./demo";
+
+// Demo mode runs entirely in the browser with a simulated partner (no backend needed).
+export const DEMO_MODE = import.meta.env.VITE_TETHER_DEMO === "true";
+
 // Relative by default: in dev Vite proxies /api to the backend, and in production the
 // backend serves this app itself — so every device only ever needs one URL.
 const API_BASE = (import.meta.env.VITE_TETHER_API_URL || "").replace(/\/$/, "");
@@ -68,16 +73,22 @@ async function request(path, { method = "GET", json, form } = {}) {
 }
 
 export function mediaUrl(path) {
-  return path ? `${API_BASE}${path}` : null;
+  if (!path) return null;
+  return path.startsWith("data:") ? path : `${API_BASE}${path}`;
 }
 
-export function websocketUrl() {
+/** The live connection: a real WebSocket, or the in-browser simulation in demo mode. */
+export function openSocket() {
+  return DEMO_MODE ? new DemoSocket() : new WebSocket(websocketUrl());
+}
+
+function websocketUrl() {
   if (API_BASE) return `${API_BASE.replace(/^http/, "ws")}/api/ws`;
   const scheme = window.location.protocol === "https:" ? "wss" : "ws";
   return `${scheme}://${window.location.host}/api/ws`;
 }
 
-export const api = {
+const serverApi = {
   signUp: (email, password, display_name) =>
     request("/api/auth/signup", { method: "POST", json: { email, password, display_name } }),
   signIn: (email, password) => request("/api/auth/signin", { method: "POST", json: { email, password } }),
@@ -117,3 +128,5 @@ export const api = {
   callSlots: () => request("/api/call-slots"),
   search: (q) => request(`/api/search?q=${encodeURIComponent(q)}`)
 };
+
+export const api = DEMO_MODE ? demoApi : serverApi;

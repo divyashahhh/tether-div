@@ -7,7 +7,7 @@ import {
   useRef,
   useState
 } from "react";
-import { api, getToken, websocketUrl } from "../../api/client";
+import { api, getToken, openSocket } from "../../api/client";
 import { describeEvent } from "../../lib/events";
 import { useAuth } from "../auth/AuthProvider";
 import { useToasts } from "../../components/ui/ToastStack";
@@ -75,7 +75,7 @@ export function PairProvider({ children }) {
     let pingTimer;
 
     const connect = () => {
-      const ws = new WebSocket(websocketUrl());
+      const ws = openSocket();
       socketRef.current = ws;
       setConnection("connecting");
 

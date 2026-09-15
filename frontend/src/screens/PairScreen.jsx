@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { api } from "../api/client";
+import { api, DEMO_MODE } from "../api/client";
 import { TopBar, Wordmark } from "../components/PhoneShell";
 import { BorderButton, Button } from "../components/ui/Button";
 import { GlowCard } from "../components/ui/GlowCard";
@@ -81,6 +81,11 @@ export function PairScreen() {
         <p className="mt-2 text-sm text-muted">
           One of you creates a code, the other types it in on their own phone. You’ll both jump in the moment it connects.
         </p>
+        {DEMO_MODE ? (
+          <p className="mt-4 rounded-2xl border border-brand/25 bg-brand-wine/30 px-4 py-2.5 text-xs text-muted">
+            <span className="font-semibold text-brand-bright">Demo mode</span> — type any code (or generate one) to connect with Sam, a simulated partner.
+          </p>
+        ) : null}
 
         {mode === "choose" ? (
           <div className="mt-8 space-y-4 animate-pop-in">
@@ -183,7 +188,7 @@ export function PairScreen() {
                 </div>
               </div>
               <ErrorText>{error}</ErrorText>
-              <BorderButton type="submit" disabled={busy || code.length < CODE_LENGTH} className="mt-6">
+              <BorderButton type="submit" disabled={busy || code.length < (DEMO_MODE ? 1 : CODE_LENGTH)} className="mt-6">
                 {busy ? <Spinner /> : null}Tether us
               </BorderButton>
               <Button type="button" variant="ghost" className="mt-2 w-full" onClick={() => setMode("choose")}>

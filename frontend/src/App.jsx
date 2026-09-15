@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { api } from "./api/client";
+import { api, DEMO_MODE } from "./api/client";
 import { IconLogout, IconMoments, IconNow, IconPlans, IconUnlink, IconUser } from "./components/Icons";
 import { BottomTabs, PhoneShell, TopBar, Wordmark } from "./components/PhoneShell";
 import { Button } from "./components/ui/Button";
@@ -112,6 +112,7 @@ function PairedHome() {
                       <p className="mt-1 text-xs text-muted">
                         Tethered with {partner.display_name} · {partnerOnline ? "online" : "offline"}
                       </p>
+                      {DEMO_MODE ? <p className="mt-1 text-[11px] text-brand-bright">Demo mode · simulated partner</p> : null}
                     </>
                   )
                 },

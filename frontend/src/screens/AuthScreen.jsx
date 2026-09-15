@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { DEMO_MODE } from "../api/client";
 import { IconLock, IconMail, IconUser } from "../components/Icons";
 import { Wordmark } from "../components/PhoneShell";
 import { BorderButton } from "../components/ui/Button";
@@ -47,6 +48,11 @@ export function AuthScreen() {
       <form onSubmit={submit} className="animate-pop-in">
         <h1 className="text-2xl font-semibold">{isSignUp ? "Create your account" : "Welcome back"}</h1>
         <p className="mb-6 mt-1 text-sm text-muted">{isSignUp ? "It takes ten seconds." : "Please sign in to continue."}</p>
+        {DEMO_MODE ? (
+          <p className="-mt-3 mb-5 rounded-2xl border border-brand/25 bg-brand-wine/30 px-4 py-2.5 text-xs text-muted">
+            <span className="font-semibold text-brand-bright">Demo mode</span> — any email and password works.
+          </p>
+        ) : null}
 
         <div className="space-y-3">
           {isSignUp ? (
@@ -77,7 +83,7 @@ export function AuthScreen() {
             value={form.password}
             onChange={update("password")}
             autoComplete={isSignUp ? "new-password" : "current-password"}
-            minLength={isSignUp ? 6 : undefined}
+            minLength={isSignUp && !DEMO_MODE ? 6 : undefined}
             required
           />
         </div>
